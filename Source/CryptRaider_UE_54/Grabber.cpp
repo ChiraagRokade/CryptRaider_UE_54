@@ -4,6 +4,7 @@
 #include "Grabber.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -22,6 +23,14 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if(PhysicsHandle != nullptr)
+	{
+		FString ActorName = PhysicsHandle->GetName();
+		UE_LOG(LogTemp, Display, TEXT("Hit Actor: %s"), *ActorName);
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("No Physics Handle Component Found"));
+	}
 	
 }
 
@@ -69,10 +78,11 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 			FString ActorName = HitActor->GetActorNameOrLabel();
 			UE_LOG(LogTemp, Display, TEXT("Hit Actor: %s"), *ActorName);
 		}
-	}else
-	{
-		UE_LOG(LogTemp, Display, TEXT("No Actor Hit"));
 	}
+	// else
+	// {
+	// 	UE_LOG(LogTemp, Display, TEXT("No Actor Hit"));
+	// }
 }
 
 // void UGrabber::PrintDamageValue(const float& DamageValue)
@@ -80,3 +90,14 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 // 	// DamageValue = 10;
 // 	UE_LOG(LogTemp, Display, TEXT("Damage Value inside function: %f"), DamageValue);
 // }
+
+void UGrabber::Release()
+{
+
+	UE_LOG(LogTemp, Display, TEXT("Release Grabber"));
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Display, TEXT("Grabber Grab"));
+}
