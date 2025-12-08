@@ -43,9 +43,40 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FVector End = Start + (GetForwardVector() * MaxGrabDistance);
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
-	float Damage = 0;
-	float& DamageRef = Damage;
-	DamageRef = 5;
-	UE_LOG(LogTemp, Display, TEXT("DamageRef Value: %f, Damage Value: %f"), DamageRef, Damage);
+	// float Damage = 5;
+	// float& DamageRef = Damage;
+	// DamageRef = 5;
+	// UE_LOG(LogTemp, Display, TEXT("DamageRef Value: %f, Damage Value: %f"), DamageRef, Damage);
+
+	// PrintDamageValue(Damage);
+	// UE_LOG(LogTemp, Display, TEXT("Damage Value after function call: %f"), Damage);
+
+	FHitResult HitResult;
+	bool HasHit = GetWorld()->SweepSingleByChannel(
+		/* OutHit */	HitResult,
+		/* Start */		Start,
+		/* End */		End,
+		/* Rot */		FQuat::Identity,
+		/* Channel */	ECC_GameTraceChannel2,
+		/* Shape */		FCollisionShape::MakeSphere(GrabRadius)
+	);
+
+	if (HasHit)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			FString ActorName = HitActor->GetActorNameOrLabel();
+			UE_LOG(LogTemp, Display, TEXT("Hit Actor: %s"), *ActorName);
+		}
+	}else
+	{
+		UE_LOG(LogTemp, Display, TEXT("No Actor Hit"));
+	}
 }
 
+// void UGrabber::PrintDamageValue(const float& DamageValue)
+// {
+// 	// DamageValue = 10;
+// 	UE_LOG(LogTemp, Display, TEXT("Damage Value inside function: %f"), DamageValue);
+// }
