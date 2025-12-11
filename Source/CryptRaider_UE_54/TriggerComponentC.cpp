@@ -20,8 +20,8 @@ void UTriggerComponentC::TickComponent(float DeltaTime, ELevelTick TickType, FAc
     
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    TArray<AActor*> Actors;
-    GetOverlappingActors(Actors);
+    // TArray<AActor*> Actors;
+    // GetOverlappingActors(Actors);
 
     // if(Actors.Num() > 0){
     //     FString ActorName = Actors[0]->GetActorNameOrLabel();
@@ -41,8 +41,29 @@ void UTriggerComponentC::TickComponent(float DeltaTime, ELevelTick TickType, FAc
     // }
 
     /*******************Range Based for loop*******************/
-    for(AActor* Actor : Actors){
-        FString ActorName = Actor->GetActorNameOrLabel();
-        UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *ActorName);
+    // for(AActor* Actor : Actors){
+    //     // FString ActorName = Actor->GetActorNameOrLabel();
+    //     // UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *ActorName);
+    //     if(Actor->ActorHasTag(AcceptableTag)){
+    //         UE_LOG(LogTemp, Display, TEXT("Unlocking"));
+    //     }
+    // }
+    if(GetAcceptableActor() != nullptr){
+        UE_LOG(LogTemp, Display, TEXT("Unlocking"));
+    }else{
+        UE_LOG(LogTemp, Display, TEXT("Relocking"));
     }
+}
+
+AActor* UTriggerComponentC::GetAcceptableActor() const{
+
+    TArray<AActor*> Actors;
+    GetOverlappingActors(Actors);
+    for(AActor* Actor : Actors){
+        if(Actor->ActorHasTag(AcceptableTag)){
+            return Actor;
+        }
+    }
+
+    return nullptr;
 }
